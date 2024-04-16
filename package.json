@@ -3,10 +3,10 @@
     "test": "jest"
   },
   "dependencies": {
-    "inquirer": "^8.2.4"
+    "inquirer": "^8.2.4",
+    "nodejs": "^0.0.0"
   },
   "devDependencies": {
     "jest": "^29.7.0"
   }
 }
-
