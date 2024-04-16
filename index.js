@@ -46,3 +46,68 @@ const questions = [
     },
 ];
 // Following function writes the data to a file
+function writeToFile(fileName, data) {
+    console.log("Writing [" + data + "] to file [" + fileName + "]")
+    filesystem.writeFile(fileName, data, function (err) {
+        if (err) {
+            return console.log(err);
+        }
+        console.log("Congrats, you have generated a logo.svg!");
+    });
+}
+async function init() {
+    console.log("Starting init");
+    var svgString = "";
+    var svg_file = "logo.svg";
+// User promt for answers
+const answers = await inquirer.createPromptModule(questions);
+    // user text
+    var user_text = "";
+    if (answers.text.length > 0 && answers.text.length < 4) {
+        // 1-3, valid 
+        user_text = answers.text;
+    } else {
+        // 0 or 4+, invalid
+        console.log("Invalid user text detected! Please enter 1-3 chars, no more or less");
+        return;
+    }
+    console.log("User text: [" + user_text + "]");
+	user_font_color = answers["text-color"];
+	console.log("User font color: [" + user_font_color + "]");
+	user_shape_color = answers.shape;
+	console.log("User shape color: [" + user_shape_color + "]");
+	user_shape_type = answers["pixel-image"];
+	console.log("User entered shape = [" + user_shape_type + "]");
+
+    let user_shape;
+    if (user_shape_type === "Square" || user_shape_type === "square") {
+        user_shape = new Square();
+        console.log("You selected the Square shape!");
+    }
+    else if (user_shape_type === "Circle" || user_shape_type === "circle") {
+        user_shape = new Circle();
+        console.log("You selected the Circle shape!");
+    }
+    else if (user_shape_type === "Triangle" || user_shape_type === "triangle") {
+        user_shape = new Triangle();
+        console.log("You selected the Triangle shape!");
+    }
+    else {
+        console.log("Invalid shape!");
+    }
+    user_shape.setColor(user_shape_color);
+
+    // Creates new Svg instance and adds shape and text elements
+    var svg = new Svg();
+    svg.setTextElement(user_text, user_font_color);
+    svg.setShapeElement(user_shape);
+    svgString = svg.render();
+
+    // Prints shape to the console
+    console.log("displaying shape:\n\n" + svgString);
+    //document.getElementById("svg_image").innerHTML = svgString;
+    console.log("Shape is complete!");
+    console.log("Writing shape to file...");
+    writeToFile(svg_file, svgString);
+}
+init()
